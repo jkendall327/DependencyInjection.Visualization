@@ -24,3 +24,19 @@ public class CircularB : ICircularB
 {
     public CircularB(ICircularA a) { }
 }
+
+// Additional test classes
+public class NoConstructorService : INoConstructorService
+{
+    private NoConstructorService() { }
+}
+
+public interface INoConstructorService { }
+
+public interface IMultiConstructorService { }
+public class MultiConstructorService : IMultiConstructorService
+{
+    public MultiConstructorService() { }
+    public MultiConstructorService(ITestService testService) { }
+    public MultiConstructorService(ITestService testService, IOtherService otherService) { }
+}
