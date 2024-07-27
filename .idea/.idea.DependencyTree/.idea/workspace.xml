@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="998c6a28-b255-4381-b5fe-01c03b69898b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DependencyInjection.Visualization/README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2jpThmyUSC7b3mZOgyYHVoPpFR3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/home/jackkendall/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/home/jackkendall/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/home/jackkendall/.local/share/Symbols/src&quot;
+    ]
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="998c6a28-b255-4381-b5fe-01c03b69898b" name="Changes" comment="" />
+      <created>1722083139532</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1722083139532</updated>
+      <workItem from="1722083140702" duration="419000" />
+      <workItem from="1722083570379" duration="1735000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1722083288792</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083288792</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1722083306677</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083306677</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add test project">
+      <option name="closed" value="true" />
+      <created>1722083346940</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083346940</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Target netstandard2.0">
+      <option name="closed" value="true" />
+      <created>1722083396314</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083396314</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Target lowest feasible version of DependencyInjection.Abstractions">
+      <option name="closed" value="true" />
+      <created>1722083589514</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083589514</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Rename type and extract types">
+      <option name="closed" value="true" />
+      <created>1722083629939</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083629939</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Extract code for building dependency tree">
+      <option name="closed" value="true" />
+      <created>1722083859199</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083859199</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Make getting assembly namespaces lazy">
+      <option name="closed" value="true" />
+      <created>1722083991527</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1722083991527</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Rename project">
+      <option name="closed" value="true" />
+      <created>1722089659088</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1722089659088</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Initial commit" />
+    <MESSAGE value="Add test project" />
+    <MESSAGE value="Target netstandard2.0" />
+    <MESSAGE value="Target lowest feasible version of DependencyInjection.Abstractions" />
+    <MESSAGE value="Rename type and extract types" />
+    <MESSAGE value="Extract code for building dependency tree" />
+    <MESSAGE value="Make getting assembly namespaces lazy" />
+    <MESSAGE value="Rename project" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rename project" />
+  </component>
+</project>
