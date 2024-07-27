@@ -59,5 +59,7 @@ if (app.Environment.IsDevelopment())
 ## Contributing
 Contributions are welcome. Please feel free to submit a pull request or issue if a feature you want is missing.
 
+This project was developed in concert with Claude 3.5 Sonnet, from Anthropic.
+
 ## License
 This project is licensed under the MIT License.
