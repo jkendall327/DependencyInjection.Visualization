@@ -6,15 +6,14 @@ namespace DependencyTree;
 
 public class DependencyTree
 {
-    private readonly IServiceCollection _services;
-    private List<ServiceNode> _rootNodes;
-    private string _projectNamespacePrefix;
+    private readonly TreeBuilder _treeBuilder = new();
+    private readonly List<ServiceNode> _rootNodes;
+    private readonly string _projectNamespacePrefix;
 
     public DependencyTree(IServiceCollection services)
     {
-        _services = services;
         _projectNamespacePrefix = DetermineNamespacePrefix();
-        BuildTree();
+        _rootNodes = _treeBuilder.BuildTree(services);
     }
     
     private string DetermineNamespacePrefix()
@@ -22,73 +21,6 @@ public class DependencyTree
         var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
         var parts = assemblyName.Split('.');
         return parts.Length > 0 ? parts[0] : string.Empty;
-    }
-
-    private void BuildTree()
-    {
-        var serviceDescriptors = _services.ToList();
-        _rootNodes = [];
-
-        foreach (var descriptor in serviceDescriptors)
-        {
-            var node = new ServiceNode(descriptor);
-            _rootNodes.Add(node);
-
-            if (descriptor.ImplementationType != null)
-            {
-                BuildDependencies(node, descriptor.ImplementationType, serviceDescriptors, []);
-            }
-        }
-    }
-
-    private void BuildDependencies(ServiceNode parentNode,
-        Type type,
-        List<ServiceDescriptor> serviceDescriptors,
-        HashSet<Type> visitedTypes)
-    {
-        if (!visitedTypes.Add(type)) return; // Prevents circular dependencies
-        
-        var constructor = GetConstructor(type, serviceDescriptors);
-    
-        if (constructor == null) return;
-
-        foreach (var parameter in constructor.GetParameters())
-        {
-            var dependency = serviceDescriptors.FirstOrDefault(sd => sd.ServiceType == parameter.ParameterType);
-
-            if (dependency != null)
-            {
-                var childNode = new ServiceNode(dependency);
-                parentNode.Dependencies.Add(childNode);
-
-                if (dependency.ImplementationType != null)
-                {
-                    BuildDependencies(childNode, dependency.ImplementationType, serviceDescriptors, [..visitedTypes]);
-                }
-            }
-        }
-    }
-
-    private ConstructorInfo? GetConstructor(Type type, List<ServiceDescriptor> serviceDescriptors)
-    {
-        var publicConstructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
-            .OrderByDescending(c => c.GetParameters().Length);
-
-        foreach (var constructor in publicConstructors)
-        {
-            if (CanResolveConstructor(constructor, serviceDescriptors))
-            {
-                return constructor;
-            }
-        }
-
-        // If no suitable public constructor is found, return null
-        return null;
-    }
-
-    private bool CanResolveConstructor(ConstructorInfo constructor, List<ServiceDescriptor> serviceDescriptors)
-    {
-        return constructor.GetParameters().All(parameter => serviceDescriptors.Any(sd => sd.ServiceType == parameter.ParameterType));
     }
     
     public DependencyChains GetRegistrationChainsByDepth(int minDepth, bool onlyUserCode = false)
