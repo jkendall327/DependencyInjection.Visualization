@@ -20,22 +20,25 @@ public class DependencyTree
     {
         var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
         var parts = assemblyName.Split('.');
+        
         return parts.Length > 0 ? parts[0] : string.Empty;
     }
     
     public DependencyChains GetRegistrationChainsByDepth(int minDepth, bool onlyUserCode = false)
     {
         var deepChains = new List<ServiceNode>();
+        
         foreach (var rootNode in _rootNodes)
         {
             if (!onlyUserCode || IsRelevantType(rootNode.Descriptor.ServiceType))
             {
-                ExploreChains(rootNode, new List<ServiceNode> { rootNode }, minDepth, deepChains, onlyUserCode);
+                ExploreChains(rootNode, [rootNode], minDepth, deepChains, onlyUserCode);
             }
         }
 
-        var stringRepresentation = GenerateTreeString(deepChains);
-        return new DependencyChains(deepChains, stringRepresentation);
+        var stringRepresentation = GenerateTreeView(deepChains);
+        
+        return new(deepChains, stringRepresentation);
     }
 
     private void ExploreChains(ServiceNode node, List<ServiceNode> currentChain, int minDepth, List<ServiceNode> result, bool onlyUserCode)
@@ -55,17 +58,19 @@ public class DependencyTree
         }
     }
     
-    public string GenerateTreeString(bool onlyUserCode = false)
+    public string GenerateTreeView(bool onlyUserCode = false)
     {
         var nodes = _rootNodes;
+        
         if (onlyUserCode)
         {
             nodes = nodes.Where(n => IsRelevantType(n.Descriptor.ServiceType)).ToList();
         }
-        return GenerateTreeString(nodes);
+        
+        return GenerateTreeView(nodes);
     }
 
-    private string GenerateTreeString(IEnumerable<ServiceNode> nodes)
+    private string GenerateTreeView(IEnumerable<ServiceNode> nodes)
     {
         var sb = new StringBuilder();
         var groupedNodes = nodes
@@ -75,7 +80,7 @@ public class DependencyTree
         foreach (var group in groupedNodes)
         {
             sb.AppendLine($"Namespace: {group.Key}");
-            sb.AppendLine(new string('-', 50));
+            sb.AppendLine(new('-', 50));
 
             foreach (var node in group)
             {
@@ -91,6 +96,7 @@ public class DependencyTree
     private void AppendNodeAndDependencies(StringBuilder sb, ServiceNode node, int depth)
     {
         sb.AppendLine($"{new string(' ', depth * 2)}{GetServiceDescription(node.Descriptor)}");
+        
         foreach (var child in node.Dependencies)
         {
             AppendNodeAndDependencies(sb, child, depth + 1);
