@@ -2,5 +2,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ce679cd0_002D509a_002D4660_002D975f_002D6c031dcec49a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TreeBuilderTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::9A8B84DC-3DDD-4816-9653-4646A62AC18D::net8.0::DependencyInjection.Visualization.Tests.TreeBuilderTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::9A8B84DC-3DDD-4816-9653-4646A62AC18D::net8.0::DependencyInjection.Visualization.Tests.DependencyTreeTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::9A8B84DC-3DDD-4816-9653-4646A62AC18D::net8.0::DepthAnalyserTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
