@@ -8,11 +8,11 @@ public class DependencyTree
 {
     private readonly TreeBuilder _treeBuilder = new();
     private readonly List<ServiceNode> _rootNodes;
-    private readonly string _projectNamespacePrefix;
+    private readonly Lazy<string> _projectNamespacePrefix;
 
-    public DependencyTree(IServiceCollection services)
+    public DependencyTree(IServiceCollection services, string? assemblyNamePrefix = null)
     {
-        _projectNamespacePrefix = DetermineNamespacePrefix();
+        _projectNamespacePrefix = assemblyNamePrefix is null ? new(DetermineNamespacePrefix) : new(() => assemblyNamePrefix);
         _rootNodes = _treeBuilder.BuildTree(services);
     }
     
@@ -99,7 +99,7 @@ public class DependencyTree
 
     private bool IsRelevantType(Type type)
     {
-        return type.Namespace != null && type.Namespace.StartsWith(_projectNamespacePrefix);
+        return type.Namespace != null && type.Namespace.StartsWith(_projectNamespacePrefix.Value);
     }
 
     private string GetServiceDescription(ServiceDescriptor descriptor)
