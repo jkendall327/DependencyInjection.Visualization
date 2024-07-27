@@ -13,13 +13,16 @@ var services = new ServiceCollection();
 services.AddTransient<IService1, Service1>();
 services.AddSingleton<IService2, Service2>();
 
-// Create a DependencyTree
+// As an extension method
+Console.WriteLine(services.GetDebugView());
+
+// For more control, create a DependencyTree
 var tree = new DependencyTree(services);
 
 // Generate and print the full tree
 Console.WriteLine(tree.GenerateTreeString());
 
-// Generate and print only user code (excluding framework services)
+// Only consider services registered in the executing assembly, or those it references
 Console.WriteLine(tree.GenerateTreeString(onlyUserCode: true));
 
 // Find and analyze dependency chains of depth 4 or more
