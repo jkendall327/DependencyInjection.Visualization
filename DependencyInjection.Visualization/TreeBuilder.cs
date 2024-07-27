@@ -3,8 +3,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjection.Visualization;
 
-public class TreeBuilder
+internal class TreeBuilder
 {
+    /// <summary>
+    /// Builds a simple tree structure representing the dependencies between services.
+    /// </summary>
+    /// <param name="services">The collection of ServiceDescriptor objects to analyze.</param>
+    /// <returns>A list of ServiceNode objects representing the root nodes of the dependency tree: that is, the services directly added to the <see cref="IServiceCollection"/>.</returns>
+    /// <remarks>
+    /// In the returned structure, each ServiceNode represents a service,
+    /// and its Dependencies property contains the services it depends on.
+    /// It handles circular dependencies to prevent infinite recursion.
+    /// </remarks>
     public List<ServiceNode> BuildTree(IEnumerable<ServiceDescriptor> services)
     {
         var serviceDescriptors = services.ToList();

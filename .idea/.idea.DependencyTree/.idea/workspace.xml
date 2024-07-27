@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="998c6a28-b255-4381-b5fe-01c03b69898b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DependencyInjection.Visualization/README.md" afterDir="false" />
+    <list default="true" id="998c6a28-b255-4381-b5fe-01c03b69898b" name="Changes" comment="Formatting etc.">
+      <change beforePath="$PROJECT_DIR$/DependencyInjection.Visualization/DependencyInjection.Visualization.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DependencyInjection.Visualization/DependencyInjection.Visualization.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DependencyInjection.Visualization/DependencyTree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DependencyInjection.Visualization/DependencyTree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DependencyInjection.Visualization/TreeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DependencyInjection.Visualization/TreeBuilder.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,6 +16,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///home/jackkendall/source/DependencyTree/DependencyInjection.Visualization.Tests/TreeBuilderTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -27,21 +32,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/home/jackkendall/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
-      &quot;/home/jackkendall/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
-      &quot;/home/jackkendall/.local/share/Symbols/src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "/home/jackkendall/.config/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
+      "/home/jackkendall/.config/JetBrains/Rider2023.3/resharper-host/SourcesCache",
+      "/home/jackkendall/.local/share/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -51,7 +56,7 @@
       <option name="presentableId" value="Default" />
       <updated>1722083139532</updated>
       <workItem from="1722083140702" duration="419000" />
-      <workItem from="1722083570379" duration="1735000" />
+      <workItem from="1722083570379" duration="3473000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -125,7 +130,55 @@
       <option name="project" value="LOCAL" />
       <updated>1722089659088</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Add README.md">
+      <option name="closed" value="true" />
+      <created>1722090058826</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1722090058826</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add stub unit tests">
+      <option name="closed" value="true" />
+      <created>1722090356908</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1722090356908</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Flesh out unit tests">
+      <option name="closed" value="true" />
+      <created>1722090828495</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1722090828495</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Flesh out unit tests">
+      <option name="closed" value="true" />
+      <created>1722090843433</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1722090843433</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Move README.md to solution root">
+      <option name="closed" value="true" />
+      <created>1722090945973</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1722090945973</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Formatting etc.">
+      <option name="closed" value="true" />
+      <created>1722091281876</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1722091281876</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -138,6 +191,11 @@
     <MESSAGE value="Extract code for building dependency tree" />
     <MESSAGE value="Make getting assembly namespaces lazy" />
     <MESSAGE value="Rename project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rename project" />
+    <MESSAGE value="Add README.md" />
+    <MESSAGE value="Add stub unit tests" />
+    <MESSAGE value="Flesh out unit tests" />
+    <MESSAGE value="Move README.md to solution root" />
+    <MESSAGE value="Formatting etc." />
+    <option name="LAST_COMMIT_MESSAGE" value="Formatting etc." />
   </component>
 </project>
