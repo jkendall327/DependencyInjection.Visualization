@@ -4,24 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyTree;
 
-public class ServiceNode(ServiceDescriptor descriptor)
-{
-    public ServiceDescriptor Descriptor { get; } = descriptor;
-    public List<ServiceNode> Dependencies { get; } = [];
-}
-
-public class DeepChainResult
-{
-    public List<ServiceNode> RootNodes { get; }
-    public string StringRepresentation { get; }
-
-    public DeepChainResult(List<ServiceNode> rootNodes, string stringRepresentation)
-    {
-        RootNodes = rootNodes;
-        StringRepresentation = stringRepresentation;
-    }
-}
-
 public class DependencyTree
 {
     private readonly IServiceCollection _services;
@@ -109,7 +91,7 @@ public class DependencyTree
         return constructor.GetParameters().All(parameter => serviceDescriptors.Any(sd => sd.ServiceType == parameter.ParameterType));
     }
     
-    public DeepChainResult GetRegistrationChainsByDepth(int minDepth, bool onlyUserCode = false)
+    public DependencyChains GetRegistrationChainsByDepth(int minDepth, bool onlyUserCode = false)
     {
         var deepChains = new List<ServiceNode>();
         foreach (var rootNode in _rootNodes)
@@ -121,7 +103,7 @@ public class DependencyTree
         }
 
         var stringRepresentation = GenerateTreeString(deepChains);
-        return new DeepChainResult(deepChains, stringRepresentation);
+        return new DependencyChains(deepChains, stringRepresentation);
     }
 
     private void ExploreChains(ServiceNode node, List<ServiceNode> currentChain, int minDepth, List<ServiceNode> result, bool onlyUserCode)
