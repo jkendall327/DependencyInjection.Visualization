@@ -18,6 +18,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="DependencyInjection.Visualization.Tests" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[3.1.0,)" />
     </ItemGroup>
 
