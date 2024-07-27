@@ -15,7 +15,13 @@
         <Description>A tool for visualizing and analyzing dependency trees in Microsoft.Extensions.DependencyInjection.</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageTags>dependencyinjection;visualization;analysis</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\img.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="DependencyInjection.Visualization.Tests" />
