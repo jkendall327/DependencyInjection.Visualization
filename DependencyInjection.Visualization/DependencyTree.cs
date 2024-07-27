@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyTree;
+namespace DependencyInjection.Visualization;
 
 public class DependencyTree
 {

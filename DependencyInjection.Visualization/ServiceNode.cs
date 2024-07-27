@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyTree;
+namespace DependencyInjection.Visualization;
 
 public class ServiceNode(ServiceDescriptor descriptor)
 {

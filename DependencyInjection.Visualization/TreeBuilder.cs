@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyTree;
+namespace DependencyInjection.Visualization;
 
 public class TreeBuilder
 {

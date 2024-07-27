@@ -1,4 +1,4 @@
-namespace DependencyTree;
+namespace DependencyInjection.Visualization;
 
 public class DependencyChains
 {
