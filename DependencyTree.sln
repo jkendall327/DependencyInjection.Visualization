@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyTree", "DependencyTree\DependencyTree.csproj", "{5CE83DD4-F24F-4D88-AE53-B1DFDF0B1950}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyTree.Tests", "DependencyTree.Tests\DependencyTree.Tests.csproj", "{9A8B84DC-3DDD-4816-9653-4646A62AC18D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{5CE83DD4-F24F-4D88-AE53-B1DFDF0B1950}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CE83DD4-F24F-4D88-AE53-B1DFDF0B1950}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CE83DD4-F24F-4D88-AE53-B1DFDF0B1950}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A8B84DC-3DDD-4816-9653-4646A62AC18D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A8B84DC-3DDD-4816-9653-4646A62AC18D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A8B84DC-3DDD-4816-9653-4646A62AC18D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A8B84DC-3DDD-4816-9653-4646A62AC18D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
