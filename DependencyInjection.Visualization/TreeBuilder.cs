@@ -75,7 +75,7 @@ internal class TreeBuilder
     
     private ServiceDescriptor? FindMatchingDescriptor(List<ServiceDescriptor> descriptors, Type serviceType)
     {
-        return descriptors.FirstOrDefault(sd => serviceType.MatchesGenerically(sd.ServiceType));
+        return descriptors.FirstOrDefault(sd => serviceType.IsInstanceOfGenericTypeDefinition(sd.ServiceType));
     }
 
     /// <summary>
@@ -101,6 +101,6 @@ internal class TreeBuilder
         return constructor
             .GetParameters()
             .All(parameter => serviceDescriptors
-                .Any(sd => parameter.ParameterType.MatchesGenerically(sd.ServiceType)));
+                .Any(sd => parameter.ParameterType.IsInstanceOfGenericTypeDefinition(sd.ServiceType)));
     }
 }
