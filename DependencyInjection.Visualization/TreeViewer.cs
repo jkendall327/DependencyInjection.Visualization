@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjection.Visualization;
 
-public class TreeViewer
+internal class TreeViewer
 {
     public string GenerateTreeView(IEnumerable<ServiceNode> rootNodes, bool onlyUserCode = false)
     {

@@ -1,6 +1,6 @@
 namespace DependencyInjection.Visualization;
 
-public class DependencyUsageCalculator
+internal class DependencyUsageCalculator
 {
     private Dictionary<Type, int>? _dependencyUsage;
 

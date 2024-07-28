@@ -1,6 +1,6 @@
 namespace DependencyInjection.Visualization;
 
-public class DepthAnalyser
+internal class DepthAnalyser
 {
     private readonly TreeViewer _treeViewer;
 

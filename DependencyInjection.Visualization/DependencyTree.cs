@@ -9,6 +9,7 @@ public class DependencyTree
 {
     private readonly TreeBuilder _treeBuilder = new();
     private readonly TreeViewer _treeViewer = new();
+    private readonly DependencyUsageCalculator _usageCalculator = new();
     private readonly DepthAnalyser _depthAnalyser;
     
     private readonly List<ServiceNode> _rootNodes;
@@ -72,5 +73,15 @@ public class DependencyTree
     public string GenerateTreeView(bool onlyUserCode = false)
     {
         return _treeViewer.GenerateTreeView(_rootNodes, onlyUserCode);
+    }
+    
+    public IEnumerable<(Type ServiceType, int UsageCount)> GetMostUsedServices(int count)
+    {
+        return _usageCalculator.GetMostUsedServices(_rootNodes, count);
+    }
+
+    public IEnumerable<Type> GetUnusedServices()
+    {
+        return _usageCalculator.GetUnusedServices(_rootNodes);
     }
 }
