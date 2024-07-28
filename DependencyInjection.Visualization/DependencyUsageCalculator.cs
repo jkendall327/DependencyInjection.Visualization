@@ -32,23 +32,25 @@ internal class DependencyUsageCalculator
         
         var usageCount = new Dictionary<Type, int>();
 
-        void TraverseNode(ServiceNode node)
-        {
-            foreach (var dependency in node.Dependencies)
-            {
-                var serviceType = dependency.Descriptor.ServiceType;
-                usageCount[serviceType] = usageCount.TryGetValue(serviceType, out var count) ? count + 1 : 1;
-                TraverseNode(dependency);
-            }
-        }
-
         foreach (var rootNode in rootNodes)
         {
-            TraverseNode(rootNode);
+            TraverseNode(rootNode, usageCount);
         }
 
         _dependencyUsage = usageCount;
         
         return usageCount;
+    }
+
+    private void TraverseNode(ServiceNode node, Dictionary<Type, int> usageCount)
+    {
+        foreach (var dependency in node.Dependencies)
+        {
+            var serviceType = dependency.Descriptor.ServiceType;
+            
+            usageCount[serviceType] = usageCount.TryGetValue(serviceType, out var count) ? count + 1 : 1;
+            
+            TraverseNode(dependency, usageCount);
+        }
     }
 }

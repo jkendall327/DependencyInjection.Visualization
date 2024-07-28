@@ -21,7 +21,7 @@ internal class TreeViewer
         foreach (var group in groupedNodes)
         {
             sb.AppendLine($"Namespace: {group.Key}");
-            sb.AppendLine(new string('─', 50));
+            sb.AppendLine(new('─', 50));
 
             foreach (var node in group)
             {
@@ -36,12 +36,16 @@ internal class TreeViewer
 
     private void AppendNodeAndDependencies(StringBuilder sb, ServiceNode node, string prefix, bool isLast)
     {
-        sb.AppendLine($"{prefix}{(isLast ? "└── " : "├── ")}{GetServiceDescription(node.Descriptor)}");
+        var serviceDescription = GetServiceDescription(node.Descriptor);
+        
+        // The glyphs here, as well as the child stuff below, handles the indentation for dependencies to a service.
+        sb.AppendLine($"{prefix}{(isLast ? "└── " : "├── ")}{serviceDescription}");
     
         for (int i = 0; i < node.Dependencies.Count; i++)
         {
             var child = node.Dependencies[i];
             var childPrefix = prefix + (isLast ? "    " : "│   ");
+        
             AppendNodeAndDependencies(sb, child, childPrefix, i == node.Dependencies.Count - 1);
         }
     }
@@ -80,7 +84,7 @@ internal class TreeViewer
                 return FormatTypeName(methodInfo.ReturnType);
             }
         }
-    
+        
         // When a premade object is used, like .AddSingleton<IFoobar>(foobar), return the type of the instance
         if (descriptor.ImplementationInstance != null)
         {
@@ -96,8 +100,11 @@ internal class TreeViewer
     private string FormatTypeName(Type type)
     {
         if (!type.IsGenericType)
+        {
             return type.Name;
+        }
 
+        // The recursive call here lets us handle arbitrarily-nested generics, e.g. List<List<List<Foobar>>>.
         var genericArgs = string.Join(", ", type.GetGenericArguments().Select(FormatTypeName));
         return $"{type.Name.Split('`')[0]}<{genericArgs}>";
     }

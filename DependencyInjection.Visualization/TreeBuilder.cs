@@ -36,12 +36,13 @@ internal class TreeBuilder
         return rootNodes;
     }
 
+    // Examines the constructors of all the services in the DI container to determine their dependencies.
     private void BuildDependencies(ServiceNode parentNode,
         Type type,
         List<ServiceDescriptor> serviceDescriptors,
         HashSet<Type> visitedTypes)
     {
-        // Prevents circular dependencies
+        // Prevents circular dependencies.
         if (!visitedTypes.Add(type)) return; 
         
         var constructor = GetConstructor(type, serviceDescriptors);
@@ -57,8 +58,11 @@ internal class TreeBuilder
             var childNode = new ServiceNode(dependency);
             parentNode.Dependencies.Add(childNode);
 
+            // ImplementationType -> the DI container was passed a type argument.
             var implementationType = dependency.ImplementationType ?? 
+                                     // The DI container was passed a pre-made instance.
                                      dependency.ImplementationInstance?.GetType() ??
+                                     // The DI container was passed a factory lambda.
                                      dependency.ImplementationFactory?.Method.ReturnType;
 
             if (implementationType != null)
@@ -71,10 +75,17 @@ internal class TreeBuilder
     
     private ServiceDescriptor? FindMatchingDescriptor(List<ServiceDescriptor> descriptors, Type serviceType)
     {
-        return descriptors.FirstOrDefault(sd => 
-            sd.ServiceType == serviceType || 
-            (sd.ServiceType.IsGenericTypeDefinition && serviceType.IsGenericType && 
-             serviceType.GetGenericTypeDefinition() == sd.ServiceType));
+        return descriptors.FirstOrDefault(sd =>
+        {
+            if (sd.ServiceType == serviceType)
+            {
+                return true;
+            }
+            
+            return sd.ServiceType.IsGenericTypeDefinition &&
+                   serviceType.IsGenericType &&
+                   serviceType.GetGenericTypeDefinition() == sd.ServiceType;
+        });
     }
 
     /// <summary>
@@ -92,6 +103,9 @@ internal class TreeBuilder
 
     private bool CanResolveConstructor(ConstructorInfo constructor, List<ServiceDescriptor> serviceDescriptors)
     {
-        return constructor.GetParameters().All(parameter => serviceDescriptors.Any(sd => sd.ServiceType == parameter.ParameterType));
+        // This could probably be made more efficient with a .Join, but I don't think it's worth it.
+        return constructor
+            .GetParameters()
+            .All(parameter => serviceDescriptors.Any(sd => sd.ServiceType == parameter.ParameterType));
     }
 }
