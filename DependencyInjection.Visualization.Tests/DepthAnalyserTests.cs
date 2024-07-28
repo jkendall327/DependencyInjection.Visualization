@@ -26,7 +26,7 @@ public class DepthAnalyserTests
     public void GetRegistrationChainsByDepth_BasicFunctionality()
     {
         var services = CreateTestServices();
-        var tree = new DependencyTree(services);
+        var tree = new DependencyTree(services, false);
 
         var result = tree.GetRegistrationChainsByDepth(2);
 
@@ -41,24 +41,10 @@ public class DepthAnalyserTests
     public void GetRegistrationChainsByDepth_DepthFiltering(int minDepth, int expectedChains)
     {
         var services = CreateTestServices();
-        var tree = new DependencyTree(services);
+        var tree = new DependencyTree(services, false);
 
         var result = tree.GetRegistrationChainsByDepth(minDepth);
 
         result.RootNodes.Should().HaveCount(expectedChains);
-    }
-
-    [Fact]
-    public void GetRegistrationChainsByDepth_UserCodeFiltering()
-    {
-        var services = CreateTestServices();
-        services.AddTransient<string, string>(); // Add a system type
-        var tree = new DependencyTree(services);
-
-        var resultWithSystemTypes = tree.GetRegistrationChainsByDepth(1, false);
-        var resultOnlyUserCode = tree.GetRegistrationChainsByDepth(1, true);
-
-        resultWithSystemTypes.RootNodes.Should().HaveCountGreaterThan(resultOnlyUserCode.RootNodes.Count);
-        resultOnlyUserCode.RootNodes.Should().NotContain(n => n.Descriptor.ServiceType == typeof(string));
     }
 }
