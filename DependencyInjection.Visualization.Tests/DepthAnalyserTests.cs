@@ -26,7 +26,7 @@ public class DepthAnalyserTests
     public void GetRegistrationChainsByDepth_BasicFunctionality()
     {
         var services = CreateTestServices();
-        var tree = new DependencyTree(services, "DependencyInjection.Visualization");
+        var tree = new DependencyTree(services);
 
         var result = tree.GetRegistrationChainsByDepth(2);
 
@@ -41,7 +41,7 @@ public class DepthAnalyserTests
     public void GetRegistrationChainsByDepth_DepthFiltering(int minDepth, int expectedChains)
     {
         var services = CreateTestServices();
-        var tree = new DependencyTree(services, "DependencyInjection.Visualization");
+        var tree = new DependencyTree(services);
 
         var result = tree.GetRegistrationChainsByDepth(minDepth);
 
@@ -53,28 +53,12 @@ public class DepthAnalyserTests
     {
         var services = CreateTestServices();
         services.AddTransient<string, string>(); // Add a system type
-        var tree = new DependencyTree(services, "DependencyInjection.Visualization");
+        var tree = new DependencyTree(services);
 
         var resultWithSystemTypes = tree.GetRegistrationChainsByDepth(1, false);
         var resultOnlyUserCode = tree.GetRegistrationChainsByDepth(1, true);
 
         resultWithSystemTypes.RootNodes.Should().HaveCountGreaterThan(resultOnlyUserCode.RootNodes.Count);
         resultOnlyUserCode.RootNodes.Should().NotContain(n => n.Descriptor.ServiceType == typeof(string));
-    }
-
-    [Fact]
-    public void GetRegistrationChainsByDepth_EmptyAndNullCases()
-    {
-        var emptyServices = new ServiceCollection();
-        var emptyTree = new DependencyTree(emptyServices, "DependencyInjection.Visualization");
-
-        var resultEmpty = emptyTree.GetRegistrationChainsByDepth(1);
-        resultEmpty.RootNodes.Should().BeEmpty();
-
-        var services = CreateTestServices();
-        var tree = new DependencyTree(services, null);
-
-        var resultNullPrefix = tree.GetRegistrationChainsByDepth(1);
-        resultNullPrefix.RootNodes.Should().NotBeEmpty();
     }
 }

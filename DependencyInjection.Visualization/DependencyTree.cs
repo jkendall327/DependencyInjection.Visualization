@@ -11,7 +11,6 @@ public class DependencyTree
 {
     private readonly TreeBuilder _treeBuilder = new();
     private readonly List<ServiceNode> _rootNodes;
-    private readonly Lazy<string> _projectNamespacePrefix;
 
     /// <summary>
     /// Initializes a new instance.
@@ -20,20 +19,11 @@ public class DependencyTree
     /// <param name="assemblyNamePrefix">Optional prefix to filter relevant types. If null, it's determined automatically by calling <see cref="Assembly.GetExecutingAssembly"/>.</param>
     /// <remarks>You </remarks>
     /// <example></example>
-    public DependencyTree(IServiceCollection services, string? assemblyNamePrefix = null)
+    public DependencyTree(IServiceCollection services)
     {
-        _projectNamespacePrefix = assemblyNamePrefix is null ? new(DetermineNamespacePrefix) : new(() => assemblyNamePrefix);
         _rootNodes = _treeBuilder.BuildTree(services);
     }
     
-    private string DetermineNamespacePrefix()
-    {
-        var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-        var parts = assemblyName.Split('.');
-        
-        return parts.Length > 0 ? parts[0] : string.Empty;
-    }
-
     private Dictionary<Type, int>? _dependencyUsage;
     
     public Dictionary<Type, int> CalculateDependencyUsage(IEnumerable<ServiceNode> rootNodes)
@@ -81,7 +71,7 @@ public class DependencyTree
         var allServices = rootNodes.Select(n => n.Descriptor.ServiceType);
         var unusedServices = allServices.Except(usageCount.Keys);
 
-        return unusedServices.Where(IsRelevantType);
+        return unusedServices.Where(TypeRelevance.IsRelevantType);
     }
     
     /// <summary>
@@ -96,7 +86,7 @@ public class DependencyTree
         
         foreach (var rootNode in _rootNodes)
         {
-            if (!onlyUserCode || IsRelevantType(rootNode.Descriptor.ServiceType))
+            if (!onlyUserCode || TypeRelevance.IsRelevantType(rootNode.Descriptor.ServiceType))
             {
                 ExploreChains(rootNode, [rootNode], minDepth, deepChains, onlyUserCode);
             }
@@ -116,7 +106,7 @@ public class DependencyTree
 
         foreach (var child in node.Dependencies)
         {
-            if (!onlyUserCode || IsRelevantType(child.Descriptor.ServiceType))
+            if (!onlyUserCode || TypeRelevance.IsRelevantType(child.Descriptor.ServiceType))
             {
                 var newChain = new List<ServiceNode>(currentChain) { child };
                 ExploreChains(child, newChain, minDepth, result, onlyUserCode);
@@ -164,7 +154,7 @@ public class DependencyTree
         
         if (onlyUserCode)
         {
-            nodes = nodes.Where(n => IsRelevantType(n.Descriptor.ServiceType)).ToList();
+            nodes = nodes.Where(n => TypeRelevance.IsRelevantType(n.Descriptor.ServiceType)).ToList();
         }
         
         return GenerateTreeView(nodes);
@@ -201,11 +191,6 @@ public class DependencyTree
         {
             AppendNodeAndDependencies(sb, child, depth + 1);
         }
-    }
-
-    private bool IsRelevantType(Type type)
-    {
-        return type.Namespace != null && type.Namespace.StartsWith(_projectNamespacePrefix.Value);
     }
 
     private string GetServiceDescription(ServiceDescriptor descriptor)
