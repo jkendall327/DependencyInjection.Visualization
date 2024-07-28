@@ -14,7 +14,7 @@ internal class DependencyUsageCalculator
             .Select(kvp => (kvp.Key, kvp.Value));
     }
 
-    public IEnumerable<Type> GetUnusedServices(IEnumerable<ServiceNode> rootNodes)
+    public IEnumerable<Type> GetUnusedServices(IList<ServiceNode> rootNodes)
     {
         var usageCount = CalculateDependencyUsage(rootNodes);
         var allServices = rootNodes.Select(n => n.Descriptor.ServiceType);
