@@ -25,12 +25,12 @@ internal class DotExporter
 
     private void ExportNode(ServiceNode node, StringBuilder sb)
     {
-        var nodeName = SanitizeNodeName(node.Descriptor.ServiceType.Name);
-        sb.AppendLine($"  {nodeName} [label=\"{node.Descriptor.ServiceType.Name}\"];");
+        var nodeName = SanitizeNodeName(node.ServiceTypeName);
+        sb.AppendLine($"  {nodeName} [label=\"{node.ServiceTypeName}\"];");
 
         foreach (var dependency in node.Dependencies)
         {
-            var depName = SanitizeNodeName(dependency.Descriptor.ServiceType.Name);
+            var depName = SanitizeNodeName(dependency.ServiceTypeName);
             sb.AppendLine($"  {nodeName} -> {depName};");
             ExportNode(dependency, sb);
         }
