@@ -14,18 +14,18 @@ internal class TreeViewer
         
         var sb = new StringBuilder();
         
-        var grouped = nodes
+        var groupedNodes = nodes
             .GroupBy(n => n.Descriptor.ServiceType.Namespace)
             .OrderBy(g => g.Key);
 
-        foreach (var group in grouped)
+        foreach (var group in groupedNodes)
         {
             sb.AppendLine($"Namespace: {group.Key}");
-            sb.AppendLine(new('-', 50));
+            sb.AppendLine(new string('─', 50));
 
             foreach (var node in group)
             {
-                AppendNodeAndDependencies(sb, node, 0);
+                AppendNodeAndDependencies(sb, node, "", true);
             }
 
             sb.AppendLine();
@@ -34,15 +34,15 @@ internal class TreeViewer
         return sb.ToString();
     }
 
-    private void AppendNodeAndDependencies(StringBuilder sb, ServiceNode node, int depth)
+    private void AppendNodeAndDependencies(StringBuilder sb, ServiceNode node, string prefix, bool isLast)
     {
-        var description = GetServiceDescription(node.Descriptor);
-        
-        sb.AppendLine($"{new string(' ', depth * 2)}{description}");
-        
-        foreach (var child in node.Dependencies)
+        sb.AppendLine($"{prefix}{(isLast ? "└── " : "├── ")}{GetServiceDescription(node.Descriptor)}");
+    
+        for (int i = 0; i < node.Dependencies.Count; i++)
         {
-            AppendNodeAndDependencies(sb, child, depth + 1);
+            var child = node.Dependencies[i];
+            var childPrefix = prefix + (isLast ? "    " : "│   ");
+            AppendNodeAndDependencies(sb, child, childPrefix, i == node.Dependencies.Count - 1);
         }
     }
 
