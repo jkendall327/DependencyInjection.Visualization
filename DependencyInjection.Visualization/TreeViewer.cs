@@ -5,27 +5,20 @@ namespace DependencyInjection.Visualization;
 
 internal class TreeViewer
 {
-    public string GenerateTreeView(IEnumerable<ServiceNode> rootNodes, bool onlyUserCode = false)
+    public string GenerateTreeView(IEnumerable<ServiceNode> nodes, bool onlyUserCode = false)
     {
-        var nodes = rootNodes;
-        
         if (onlyUserCode)
         {
             nodes = nodes.Where(n => TypeRelevance.IsUserType(n.Descriptor.ServiceType)).ToList();
         }
         
-        return GenerateTreeView(nodes);
-    }
-
-    public string GenerateTreeView(IEnumerable<ServiceNode> nodes)
-    {
         var sb = new StringBuilder();
         
-        var groupedNodes = nodes
+        var grouped = nodes
             .GroupBy(n => n.Descriptor.ServiceType.Namespace)
             .OrderBy(g => g.Key);
 
-        foreach (var group in groupedNodes)
+        foreach (var group in grouped)
         {
             sb.AppendLine($"Namespace: {group.Key}");
             sb.AppendLine(new('-', 50));
@@ -43,7 +36,9 @@ internal class TreeViewer
 
     private void AppendNodeAndDependencies(StringBuilder sb, ServiceNode node, int depth)
     {
-        sb.AppendLine($"{new string(' ', depth * 2)}{GetServiceDescription(node.Descriptor)}");
+        var description = GetServiceDescription(node.Descriptor);
+        
+        sb.AppendLine($"{new string(' ', depth * 2)}{description}");
         
         foreach (var child in node.Dependencies)
         {
@@ -61,6 +56,7 @@ internal class TreeViewer
         return $"{serviceType} -> {implementation} ({lifetime})";
     }
     
+    // TODO: open generics?
     private string GetImplementationDescription(ServiceDescriptor descriptor)
     {
         // For simple cases like .AddSingleton<IFoobar, Foobar>, return Foobar
