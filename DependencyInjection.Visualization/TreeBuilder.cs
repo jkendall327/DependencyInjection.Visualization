@@ -50,18 +50,31 @@ internal class TreeBuilder
 
         foreach (var parameter in constructor.GetParameters())
         {
-            var dependency = serviceDescriptors.FirstOrDefault(sd => sd.ServiceType == parameter.ParameterType);
+            var dependency = FindMatchingDescriptor(serviceDescriptors, parameter.ParameterType);
 
-            if (dependency is null) continue;
+            if (dependency == null) continue;
             
             var childNode = new ServiceNode(dependency);
             parentNode.Dependencies.Add(childNode);
 
-            if (dependency.ImplementationType != null)
+            var implementationType = dependency.ImplementationType ?? 
+                                     dependency.ImplementationInstance?.GetType() ??
+                                     dependency.ImplementationFactory?.Method.ReturnType;
+
+            if (implementationType != null)
             {
-                BuildDependencies(childNode, dependency.ImplementationType, serviceDescriptors, [..visitedTypes]);
+                BuildDependencies(childNode, implementationType, serviceDescriptors, [..visitedTypes]);
             }
         }
+    }
+    
+    
+    private ServiceDescriptor? FindMatchingDescriptor(List<ServiceDescriptor> descriptors, Type serviceType)
+    {
+        return descriptors.FirstOrDefault(sd => 
+            sd.ServiceType == serviceType || 
+            (sd.ServiceType.IsGenericTypeDefinition && serviceType.IsGenericType && 
+             serviceType.GetGenericTypeDefinition() == sd.ServiceType));
     }
 
     /// <summary>

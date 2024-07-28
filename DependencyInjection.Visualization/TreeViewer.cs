@@ -49,23 +49,23 @@ internal class TreeViewer
     private string GetServiceDescription(ServiceDescriptor descriptor)
     {
         var lifetime = descriptor.Lifetime.ToString();
-        var serviceType = descriptor.ServiceType.Name;
+        var serviceType = FormatTypeName(descriptor.ServiceType);
         
         var implementation = GetImplementationDescription(descriptor);
         
         return $"{serviceType} -> {implementation} ({lifetime})";
     }
     
-    // TODO: open generics?
     private string GetImplementationDescription(ServiceDescriptor descriptor)
     {
         // For simple cases like .AddSingleton<IFoobar, Foobar>, return Foobar
         if (descriptor.ImplementationType != null)
         {
-            return descriptor.ImplementationType.Name;
+            return FormatTypeName(descriptor.ImplementationType);
         }
     
         // When lambdas are used, like .AddSingleton<IFoobar>(x => new Foobar()), get the return type of the lambda
+
         if (descriptor.ImplementationFactory != null)
         {
             var factoryType = descriptor.ImplementationFactory.GetType();
@@ -73,16 +73,28 @@ internal class TreeViewer
             
             if (methodInfo != null)
             {
-                return methodInfo.ReturnType.Name;
+                return FormatTypeName(methodInfo.ReturnType);
             }
         }
     
         // When a premade object is used, like .AddSingleton<IFoobar>(foobar), return the type of the instance
         if (descriptor.ImplementationInstance != null)
         {
-            return $"Instance of {descriptor.ImplementationInstance.GetType().Name}";
+            return $"Instance of {FormatTypeName(descriptor.ImplementationInstance.GetType())}";
         }
 
         return "Unknown";
+    }
+
+    /// <summary>
+    /// Handles generic types.
+    /// </summary>
+    private string FormatTypeName(Type type)
+    {
+        if (!type.IsGenericType)
+            return type.Name;
+
+        var genericArgs = string.Join(", ", type.GetGenericArguments().Select(FormatTypeName));
+        return $"{type.Name.Split('`')[0]}<{genericArgs}>";
     }
 }
