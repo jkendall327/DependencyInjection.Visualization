@@ -10,6 +10,7 @@ public class DependencyTree
     private readonly TreeBuilder _treeBuilder = new();
     private readonly TreeViewer _treeViewer = new();
     private readonly DependencyUsageCalculator _usageCalculator = new();
+    private readonly DotExporter _dotExporter = new();
     private readonly DepthAnalyser _depthAnalyser;
     
     private readonly List<ServiceNode> _rootNodes;
@@ -91,5 +92,10 @@ public class DependencyTree
     public List<Type> GetUnusedServices()
     {
         return _usageCalculator.GetUnusedServices(_rootNodes);
+    }
+
+    public string GetDotGraph()
+    {
+        return _dotExporter.ExportToDot(_rootNodes, _onlyUserCode);
     }
 }
