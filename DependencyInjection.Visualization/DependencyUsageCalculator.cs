@@ -4,11 +4,17 @@ internal class DependencyUsageCalculator
 {
     private Dictionary<Type, int>? _dependencyUsage;
 
-    public List<(Type ServiceType, int UsageCount)> GetMostUsedServices(IEnumerable<ServiceNode> rootNodes, int count)
+    public List<(Type ServiceType, int UsageCount)> GetMostUsedServices(IEnumerable<ServiceNode> rootNodes,
+        int count,
+        bool onlyUserCode)
     {
         var usageCount = CalculateDependencyUsage(rootNodes);
+
+        var filtered = onlyUserCode
+            ? usageCount.Where(kvp => TypeRelevance.IsUserType(kvp.Key))
+            : usageCount;
         
-        return usageCount
+        return filtered
             .OrderByDescending(kvp => kvp.Value)
             .Take(count)
             .Select(kvp => (kvp.Key, kvp.Value))

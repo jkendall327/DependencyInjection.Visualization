@@ -14,13 +14,17 @@ public class DependencyTree
     
     private readonly List<ServiceNode> _rootNodes;
 
+    private readonly bool _onlyUserCode;
+    
     /// <summary>
     /// Initializes a new instance.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to analyze.</param>
-    public DependencyTree(IServiceCollection services)
+    /// <param name="onlyUserCode">If true, only includes types from the project's namespace.</param>
+    public DependencyTree(IServiceCollection services, bool onlyUserCode)
     {
         _depthAnalyser = new(_treeViewer);
+        _onlyUserCode = onlyUserCode;
         
         _rootNodes = _treeBuilder.BuildTree(services);
     }
@@ -29,11 +33,10 @@ public class DependencyTree
     /// Retrieves dependency chains that meet or exceed a specified depth.
     /// </summary>
     /// <param name="minDepth">The minimum depth of chains to include. This is 1-indexed, not 0-indexed.</param>
-    /// <param name="onlyUserCode">If true, only includes types from the project's namespace.</param>
     /// <returns>An object containing the filtered chains and a tree view of their hierarchy.</returns>
-    public DependencyChains GetRegistrationChainsByDepth(int minDepth, bool onlyUserCode = false)
+    public DependencyChains GetRegistrationChainsByDepth(int minDepth)
     {
-        return _depthAnalyser.GetRegistrationChainsByDepth(_rootNodes, minDepth, onlyUserCode);
+        return _depthAnalyser.GetRegistrationChainsByDepth(_rootNodes, minDepth, _onlyUserCode);
     }
     
     /// <summary>
@@ -70,9 +73,9 @@ public class DependencyTree
     /// // IBarService -> BarService (Scoped)
     /// </code>
     /// </example>
-    public string GenerateTreeView(bool onlyUserCode = false)
+    public string GenerateTreeView()
     {
-        return _treeViewer.GenerateTreeView(_rootNodes, onlyUserCode);
+        return _treeViewer.GenerateTreeView(_rootNodes, _onlyUserCode);
     }
     
     /// <summary>
@@ -82,7 +85,7 @@ public class DependencyTree
     /// <returns>An enumerable of tuples containing the service type and its usage count.</returns>
     public List<(Type ServiceType, int UsageCount)> GetMostUsedServices(int count)
     {
-        return _usageCalculator.GetMostUsedServices(_rootNodes, count);
+        return _usageCalculator.GetMostUsedServices(_rootNodes, count, _onlyUserCode);
     }
     
     /// <summary>
