@@ -104,8 +104,18 @@ internal class TreeBuilder
     private bool CanResolveConstructor(ConstructorInfo constructor, List<ServiceDescriptor> serviceDescriptors)
     {
         // This could probably be made more efficient with a .Join, but I don't think it's worth it.
-        return constructor
-            .GetParameters()
-            .All(parameter => serviceDescriptors.Any(sd => sd.ServiceType == parameter.ParameterType));
+        return constructor.GetParameters().All(parameter =>
+        {
+            return serviceDescriptors.Any(sd =>
+            {
+                // This is for cases where a constructor asks for a closed generic (ILogger<MyClass>)
+                // but the container has registered an open generic for it (ILogger<>).
+                var matchesGenerically = sd.ServiceType.IsGenericTypeDefinition &&
+                                         parameter.ParameterType.IsGenericType &&
+                                         parameter.ParameterType.GetGenericTypeDefinition() == sd.ServiceType;
+                
+                return sd.ServiceType == parameter.ParameterType || matchesGenerically;
+            });
+        });
     }
 }
