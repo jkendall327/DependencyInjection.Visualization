@@ -20,7 +20,7 @@ internal class DependencyUsageCalculator
         var allServices = rootNodes.Select(n => n.Descriptor.ServiceType);
         var unusedServices = allServices.Except(usageCount.Keys);
 
-        return unusedServices.Where(TypeRelevance.IsRelevantType);
+        return unusedServices.Where(TypeRelevance.IsUserType);
     }
 
     private Dictionary<Type, int> CalculateDependencyUsage(IEnumerable<ServiceNode> rootNodes)

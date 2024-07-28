@@ -12,13 +12,17 @@ internal class DepthAnalyser
     public DependencyChains GetRegistrationChainsByDepth(List<ServiceNode> rootNodes, int minDepth, bool onlyUserCode = false)
     {
         var deepChains = new List<ServiceNode>();
+
+        IEnumerable<ServiceNode> ofInterest = rootNodes;
         
-        foreach (var rootNode in rootNodes)
+        if (onlyUserCode)
         {
-            if (!onlyUserCode || TypeRelevance.IsRelevantType(rootNode.Descriptor.ServiceType))
-            {
-                ExploreChains(rootNode, [rootNode], minDepth, deepChains, onlyUserCode);
-            }
+            ofInterest = rootNodes.Where(rootNode => TypeRelevance.IsUserType(rootNode.Descriptor.ServiceType));
+        }
+        
+        foreach (var node in ofInterest)
+        {
+            ExploreChains(node, [node], minDepth, deepChains, onlyUserCode);
         }
 
         var stringRepresentation = _treeViewer.GenerateTreeView(deepChains);
@@ -35,11 +39,11 @@ internal class DepthAnalyser
 
         foreach (var child in node.Dependencies)
         {
-            if (!onlyUserCode || TypeRelevance.IsRelevantType(child.Descriptor.ServiceType))
-            {
-                var newChain = new List<ServiceNode>(currentChain) { child };
-                ExploreChains(child, newChain, minDepth, result, onlyUserCode);
-            }
+            if (onlyUserCode && !TypeRelevance.IsUserType(child.Descriptor.ServiceType)) continue;
+            
+            var newChain = new List<ServiceNode>(currentChain) { child };
+            
+            ExploreChains(child, newChain, minDepth, result, onlyUserCode);
         }
     }
 }

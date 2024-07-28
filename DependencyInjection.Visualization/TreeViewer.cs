@@ -11,7 +11,7 @@ internal class TreeViewer
         
         if (onlyUserCode)
         {
-            nodes = nodes.Where(n => TypeRelevance.IsRelevantType(n.Descriptor.ServiceType)).ToList();
+            nodes = nodes.Where(n => TypeRelevance.IsUserType(n.Descriptor.ServiceType)).ToList();
         }
         
         return GenerateTreeView(nodes);
