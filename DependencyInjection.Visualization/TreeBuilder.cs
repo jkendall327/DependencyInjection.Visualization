@@ -75,17 +75,7 @@ internal class TreeBuilder
     
     private ServiceDescriptor? FindMatchingDescriptor(List<ServiceDescriptor> descriptors, Type serviceType)
     {
-        return descriptors.FirstOrDefault(sd =>
-        {
-            if (sd.ServiceType == serviceType)
-            {
-                return true;
-            }
-            
-            return sd.ServiceType.IsGenericTypeDefinition &&
-                   serviceType.IsGenericType &&
-                   serviceType.GetGenericTypeDefinition() == sd.ServiceType;
-        });
+        return descriptors.FirstOrDefault(sd => serviceType.MatchesGenerically(sd.ServiceType));
     }
 
     /// <summary>
@@ -98,24 +88,19 @@ internal class TreeBuilder
             .GetConstructors(BindingFlags.Public | BindingFlags.Instance)
             .OrderByDescending(c => c.GetParameters().Length);
 
+        // We know it's public.
+        // Now we filter to ctors which only request types in the DI container.
+        // The complexity here is that a service can request a closed type (ILogger<MyClass>)
+        // which is registered in the container as an open one (ILogger<>).
         return publicConstructors.FirstOrDefault(constructor => CanResolveConstructor(constructor, serviceDescriptors));
     }
 
     private bool CanResolveConstructor(ConstructorInfo constructor, List<ServiceDescriptor> serviceDescriptors)
     {
         // This could probably be made more efficient with a .Join, but I don't think it's worth it.
-        return constructor.GetParameters().All(parameter =>
-        {
-            return serviceDescriptors.Any(sd =>
-            {
-                // This is for cases where a constructor asks for a closed generic (ILogger<MyClass>)
-                // but the container has registered an open generic for it (ILogger<>).
-                var matchesGenerically = sd.ServiceType.IsGenericTypeDefinition &&
-                                         parameter.ParameterType.IsGenericType &&
-                                         parameter.ParameterType.GetGenericTypeDefinition() == sd.ServiceType;
-                
-                return sd.ServiceType == parameter.ParameterType || matchesGenerically;
-            });
-        });
+        return constructor
+            .GetParameters()
+            .All(parameter => serviceDescriptors
+                .Any(sd => parameter.ParameterType.MatchesGenerically(sd.ServiceType)));
     }
 }
