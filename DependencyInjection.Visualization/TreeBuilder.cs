@@ -72,7 +72,6 @@ internal class TreeBuilder
         }
     }
     
-    
     private ServiceDescriptor? FindMatchingDescriptor(List<ServiceDescriptor> descriptors, Type serviceType)
     {
         return descriptors.FirstOrDefault(sd => serviceType.IsInstanceOfGenericTypeDefinition(sd.ServiceType));

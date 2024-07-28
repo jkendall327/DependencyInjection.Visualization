@@ -73,7 +73,6 @@ internal class TreeViewer
         }
     
         // When lambdas are used, like .AddSingleton<IFoobar>(x => new Foobar()), get the return type of the lambda
-
         if (descriptor.ImplementationFactory != null)
         {
             var factoryType = descriptor.ImplementationFactory.GetType();
