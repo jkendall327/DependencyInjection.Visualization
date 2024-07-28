@@ -75,11 +75,20 @@ public class DependencyTree
         return _treeViewer.GenerateTreeView(_rootNodes, onlyUserCode);
     }
     
+    /// <summary>
+    /// Retrieves the most frequently used services in the dependency tree, that is, those which are requested by other services the most.
+    /// </summary>
+    /// <param name="count">The number of top services to return.</param>
+    /// <returns>An enumerable of tuples containing the service type and its usage count.</returns>
     public IEnumerable<(Type ServiceType, int UsageCount)> GetMostUsedServices(int count)
     {
         return _usageCalculator.GetMostUsedServices(_rootNodes, count);
     }
-
+    
+    /// <summary>
+    /// Identifies services that are registered by your code but not used as dependencies by any other service.
+    /// </summary>
+    /// <returns>An enumerable of the unused services.</returns>
     public IEnumerable<Type> GetUnusedServices()
     {
         return _usageCalculator.GetUnusedServices(_rootNodes);
