@@ -50,23 +50,6 @@ Install via NuGet:
 
 `dotnet add package JKendall.DependencyInjection.Visualization`
 
-## Considerations
-
-This library uses reflection to build the tree of dependencies in your IServiceProvider.
-
-I recommend running it behind a debug flag:
-
-```csharp
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    var tree = new DependencyTree(builder.Services);
-
-    // ...
-}
-```
-
 ## Contributing
 Contributions are welcome. Please feel free to submit a pull request or issue if a feature you want is missing.
 
