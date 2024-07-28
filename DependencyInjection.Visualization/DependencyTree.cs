@@ -15,7 +15,10 @@ public class DependencyTree
     
     private readonly List<ServiceNode> _rootNodes;
 
-    private readonly bool _onlyUserCode;
+    /// <summary>
+    /// If true, only types from namespace in the currently executing projects will be included in dependency analysis.
+    /// </summary>
+    public bool OnlyUserCode { get; }
     
     /// <summary>
     /// Initializes a new instance.
@@ -26,11 +29,11 @@ public class DependencyTree
     /// The tree will then only care about types starting with a Foobar.* namespace,
     /// such as Foobar.Utils.Http.MyCustomApiClient.</remarks>
     /// <param name="services">The <see cref="IServiceCollection"/> to analyze.</param>
-    /// <param name="onlyUserCode">If true, only includes types from namespaces in the current projects.</param>
+    /// <param name="onlyUserCode">If true, only includes types from namespaces in the currently executing projects.</param>
     public DependencyTree(IServiceCollection services, bool onlyUserCode)
     {
         _depthAnalyser = new(_treeViewer);
-        _onlyUserCode = onlyUserCode;
+        OnlyUserCode = onlyUserCode;
         
         _rootNodes = _treeBuilder.BuildTree(services);
     }
@@ -42,7 +45,7 @@ public class DependencyTree
     /// <returns>An object containing the filtered chains and a string representation of their hierarchy.</returns>
     public DependencyChains GetRegistrationChainsByDepth(int minDepth)
     {
-        return _depthAnalyser.GetRegistrationChainsByDepth(_rootNodes, minDepth, _onlyUserCode);
+        return _depthAnalyser.GetRegistrationChainsByDepth(_rootNodes, minDepth, OnlyUserCode);
     }
     
     /// <summary>
@@ -71,7 +74,7 @@ public class DependencyTree
     /// </example>
     public string GenerateTreeView()
     {
-        return _treeViewer.GenerateTreeView(_rootNodes, _onlyUserCode);
+        return _treeViewer.GenerateTreeView(_rootNodes, OnlyUserCode);
     }
     
     /// <summary>
@@ -81,7 +84,7 @@ public class DependencyTree
     /// <returns>A list of tuples containing the service type and its usage count.</returns>
     public List<(Type ServiceType, int UsageCount)> GetMostUsedServices(int count)
     {
-        return _usageCalculator.GetMostUsedServices(_rootNodes, count, _onlyUserCode);
+        return _usageCalculator.GetMostUsedServices(_rootNodes, count, OnlyUserCode);
     }
     
     /// <summary>
@@ -94,8 +97,17 @@ public class DependencyTree
         return _usageCalculator.GetUnusedServices(_rootNodes);
     }
 
+    /// <summary>
+    /// Generates a DOT (Graph Description Language) representation of the dependency tree.
+    /// </summary>
+    /// <returns>A string containing the DOT graph description of the dependency tree.</returns>
+    /// <remarks>
+    /// The generated DOT graph can be used with graph visualization tools like Graphviz to create
+    /// a visual representation of the dependency structure.
+    /// This will likely be very busy unless <see cref="OnlyUserCode"/> is true.
+    /// </remarks>
     public string GetDotGraph()
     {
-        return _dotExporter.ExportToDot(_rootNodes, _onlyUserCode);
+        return _dotExporter.ExportToDot(_rootNodes, OnlyUserCode);
     }
 }
