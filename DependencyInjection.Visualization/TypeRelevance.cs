@@ -13,7 +13,7 @@ public class TypeRelevance
     
     private static string DetermineNamespacePrefix()
     {
-        var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+        var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name;
         var parts = assemblyName.Split('.');
         
         return parts.Length > 0 ? parts[0] : string.Empty;
