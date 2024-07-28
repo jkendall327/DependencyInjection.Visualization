@@ -53,7 +53,11 @@ internal class TreeViewer
         
         var implementation = GetImplementationDescription(descriptor);
         
-        return $"{serviceType} -> {implementation} ({lifetime})";
+        // If the service was registered 'simply', e.g. services.AddSingleton<Foobar>(),
+        // there's no point naming the type twice as both service and implementation.
+        return serviceType == implementation
+            ? $"{serviceType} ({lifetime})"
+            : $"{serviceType} -> {implementation} ({lifetime})";
     }
     
     private string GetImplementationDescription(ServiceDescriptor descriptor)
