@@ -4,23 +4,24 @@ internal class DependencyUsageCalculator
 {
     private Dictionary<Type, int>? _dependencyUsage;
 
-    public IEnumerable<(Type ServiceType, int UsageCount)> GetMostUsedServices(IEnumerable<ServiceNode> rootNodes, int count)
+    public List<(Type ServiceType, int UsageCount)> GetMostUsedServices(IEnumerable<ServiceNode> rootNodes, int count)
     {
         var usageCount = CalculateDependencyUsage(rootNodes);
         
         return usageCount
             .OrderByDescending(kvp => kvp.Value)
             .Take(count)
-            .Select(kvp => (kvp.Key, kvp.Value));
+            .Select(kvp => (kvp.Key, kvp.Value))
+            .ToList();
     }
 
-    public IEnumerable<Type> GetUnusedServices(IList<ServiceNode> rootNodes)
+    public List<Type> GetUnusedServices(IList<ServiceNode> rootNodes)
     {
         var usageCount = CalculateDependencyUsage(rootNodes);
         var allServices = rootNodes.Select(n => n.Descriptor.ServiceType);
         var unusedServices = allServices.Except(usageCount.Keys);
 
-        return unusedServices.Where(TypeRelevance.IsUserType);
+        return unusedServices.Where(TypeRelevance.IsUserType).ToList();
     }
 
     private Dictionary<Type, int> CalculateDependencyUsage(IEnumerable<ServiceNode> rootNodes)
