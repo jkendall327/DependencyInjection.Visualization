@@ -36,7 +36,7 @@ internal class TreeViewer
 
     private void AppendNodeAndDependencies(StringBuilder sb, ServiceNode node, string prefix, bool isLast)
     {
-        var serviceDescription = GetServiceDescription(node.Descriptor);
+        var serviceDescription = GetServiceDescription(node);
         
         // The glyphs here, as well as the child stuff below, handles the indentation for dependencies to a service.
         sb.AppendLine($"{prefix}{(isLast ? "└── " : "├── ")}{serviceDescription}");
@@ -50,61 +50,18 @@ internal class TreeViewer
         }
     }
 
-    private string GetServiceDescription(ServiceDescriptor descriptor)
+    private string GetServiceDescription(ServiceNode node)
     {
-        var lifetime = descriptor.Lifetime.ToString();
-        var serviceType = FormatTypeName(descriptor.ServiceType);
+        var lifetime = node.Lifetime.ToString();
         
-        var implementation = GetImplementationDescription(descriptor);
+        var serviceType = node.ServiceTypeName;
+        
+        var implementation = node.GetImplementationDescription();
         
         // If the service was registered 'simply', e.g. services.AddSingleton<Foobar>(),
         // there's no point naming the type twice as both service and implementation.
         return serviceType == implementation
             ? $"{serviceType} ({lifetime})"
             : $"{serviceType} -> {implementation} ({lifetime})";
-    }
-    
-    private string GetImplementationDescription(ServiceDescriptor descriptor)
-    {
-        // For simple cases like .AddSingleton<IFoobar, Foobar>, return Foobar
-        if (descriptor.ImplementationType != null)
-        {
-            return FormatTypeName(descriptor.ImplementationType);
-        }
-    
-        // When lambdas are used, like .AddSingleton<IFoobar>(x => new Foobar()), get the return type of the lambda
-        if (descriptor.ImplementationFactory != null)
-        {
-            var factoryType = descriptor.ImplementationFactory.GetType();
-            var methodInfo = factoryType.GetMethod("Invoke");
-            
-            if (methodInfo != null)
-            {
-                return FormatTypeName(methodInfo.ReturnType);
-            }
-        }
-        
-        // When a premade object is used, like .AddSingleton<IFoobar>(foobar), return the type of the instance
-        if (descriptor.ImplementationInstance != null)
-        {
-            return $"Instance of {FormatTypeName(descriptor.ImplementationInstance.GetType())}";
-        }
-
-        return "Unknown";
-    }
-
-    /// <summary>
-    /// Handles generic types.
-    /// </summary>
-    private string FormatTypeName(Type type)
-    {
-        if (!type.IsGenericType)
-        {
-            return type.Name;
-        }
-
-        // The recursive call here lets us handle arbitrarily-nested generics, e.g. List<List<List<Foobar>>>.
-        var genericArgs = string.Join(", ", type.GetGenericArguments().Select(FormatTypeName));
-        return $"{type.Name.Split('`')[0]}<{genericArgs}>";
     }
 }
