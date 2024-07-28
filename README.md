@@ -1,6 +1,6 @@
 # DependencyInjection.Visualization
 
-This library provides types for visualizing and analyzing dependency injection trees in .NET applications. It helps identify deep dependency chains and presents your solution's architecture in an intuitive way.
+This library provides types for visualizing dependency hierarchies in `Microsoft.Extensions.DependencyInjection`'s `IServiceCollection`. It presents your solution's architecture in an intuitive way, helps identify deeply-nested dependency chains, and can find services which are unused, despite being registered.
 
 ### Quickstart
 
@@ -8,28 +8,36 @@ This library provides types for visualizing and analyzing dependency injection t
 using JKendall.DependencyInjection.Visualization;
 using Microsoft.Extensions.DependencyInjection;
 
-// Setup your services
+// Setup your services.
 var services = new ServiceCollection();
 services.AddTransient<IService1, Service1>();
 services.AddSingleton<IService2, Service2>();
 
-// As an extension method
+// Handles open generic registrations.
+services.AddSingleton(typeof(IFoobar<,,>), typeof(Foobar<,,>));
+
+// Quickly see the hierarchy of your IServiceCollection via an extension method.
 Console.WriteLine(services.GetDebugView());
 
-// For more control, create a DependencyTree
-var tree = new DependencyTree(services);
+// For more control, create a DependencyTree.
+// You can filter the tree to only include services defined in
+// the currently-executing assembly and those it references.
+var tree = new DependencyTree(services, onlyUserCode: false);
 
-// Generate and print the full tree
+// Generate and print the full tree.
 Console.WriteLine(tree.GenerateTreeString());
 
-// Only consider services registered in the executing assembly, or those it references
-Console.WriteLine(tree.GenerateTreeString(onlyUserCode: true));
-
-// Find and analyze dependency chains of depth 4 or more
-var deepChains = tree.GetRegistrationChainsByDepth(4, onlyUserCode: true);
+// Find deeply-nested dependency chains.
+var deepChains = tree.GetRegistrationChainsByDepth(4);
 
 Console.WriteLine($"Found {deepChains.RootNodes.Count} deep chains:");
 Console.WriteLine(deepChains.StringRepresentation);
+
+// See what services are used most frequently...
+var topFiveMostUsed = tree.GetMostUsedServices(5);
+
+// ...and which are never used, despite being registered.
+var unused = tree.GetUnusedServices();
 ```
 
 ## Example output

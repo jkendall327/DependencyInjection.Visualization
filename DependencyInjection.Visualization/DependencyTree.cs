@@ -19,8 +19,13 @@ public class DependencyTree
     /// <summary>
     /// Initializes a new instance.
     /// </summary>
+    /// <remarks>The 'user code' spoken of in the bool argument more strictly means
+    /// 'all the types with namespaces that start with the first portion of the name of the entry assembly'.
+    /// Say your solution contains the Foobar.WebUI, Foobar.Core and Foobar.Tests projects.
+    /// The tree will then only care about types starting with a Foobar.* namespace,
+    /// such as Foobar.Utils.Http.MyCustomApiClient.</remarks>
     /// <param name="services">The <see cref="IServiceCollection"/> to analyze.</param>
-    /// <param name="onlyUserCode">If true, only includes types from the project's namespace.</param>
+    /// <param name="onlyUserCode">If true, only includes types from namespaces in the current projects.</param>
     public DependencyTree(IServiceCollection services, bool onlyUserCode)
     {
         _depthAnalyser = new(_treeViewer);
@@ -33,7 +38,7 @@ public class DependencyTree
     /// Retrieves dependency chains that meet or exceed a specified depth.
     /// </summary>
     /// <param name="minDepth">The minimum depth of chains to include. This is 1-indexed, not 0-indexed.</param>
-    /// <returns>An object containing the filtered chains and a tree view of their hierarchy.</returns>
+    /// <returns>An object containing the filtered chains and a string representation of their hierarchy.</returns>
     public DependencyChains GetRegistrationChainsByDepth(int minDepth)
     {
         return _depthAnalyser.GetRegistrationChainsByDepth(_rootNodes, minDepth, _onlyUserCode);
@@ -42,7 +47,6 @@ public class DependencyTree
     /// <summary>
     /// Generates a formatted string representation of the dependency tree.
     /// </summary>
-    /// <param name="onlyUserCode">If true, only includes types from namespaces in the current project and its directly-referenced projects.</param>
     /// <returns>A string representation of the dependency tree, grouped by namespace.</returns>
     /// /// <example>
     /// Exemplar output when all services are included:
@@ -62,15 +66,6 @@ public class DependencyTree
     /// // --------------------------------------------------
     /// // ILoggerFactory -> LoggerFactory (Singleton)
     /// //   IOptions&lt;LoggerFilterOptions&gt; -> OptionsManager&lt;LoggerFilterOptions&gt; (Singleton)
-    /// //
-    /// </code>
-    /// 
-    /// Exemplar output when only user code is analysed:
-    /// <code>
-    /// // Namespace: YourProject.Services
-    /// // --------------------------------------------------
-    /// // IFooService -> FooService (Singleton)
-    /// // IBarService -> BarService (Scoped)
     /// </code>
     /// </example>
     public string GenerateTreeView()
@@ -82,16 +77,17 @@ public class DependencyTree
     /// Retrieves the most frequently used services in the dependency tree, that is, those which are requested by other services the most.
     /// </summary>
     /// <param name="count">The number of top services to return.</param>
-    /// <returns>An enumerable of tuples containing the service type and its usage count.</returns>
+    /// <returns>A list of tuples containing the service type and its usage count.</returns>
     public List<(Type ServiceType, int UsageCount)> GetMostUsedServices(int count)
     {
         return _usageCalculator.GetMostUsedServices(_rootNodes, count, _onlyUserCode);
     }
     
     /// <summary>
-    /// Identifies services that are registered by your code but not used as dependencies by any other service.
+    /// Identifies types registered in the container that aren't requested by any other service.
     /// </summary>
-    /// <returns>An enumerable of the unused services.</returns>
+    /// <remarks>This includes cases where you register an interface (IFoobar), but only ever request concrete instances (Foobar).</remarks>
+    /// <returns>A list of the unused services.</returns>
     public List<Type> GetUnusedServices()
     {
         return _usageCalculator.GetUnusedServices(_rootNodes);
