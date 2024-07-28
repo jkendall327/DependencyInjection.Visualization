@@ -1,5 +1,3 @@
-using System.Reflection;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjection.Visualization;
@@ -11,6 +9,7 @@ public class DependencyTree
 {
     private readonly TreeBuilder _treeBuilder = new();
     private readonly TreeViewer _treeViewer = new();
+    private readonly DepthAnalyser _depthAnalyser;
     
     private readonly List<ServiceNode> _rootNodes;
 
@@ -20,6 +19,8 @@ public class DependencyTree
     /// <param name="services">The <see cref="IServiceCollection"/> to analyze.</param>
     public DependencyTree(IServiceCollection services)
     {
+        _depthAnalyser = new(_treeViewer);
+        
         _rootNodes = _treeBuilder.BuildTree(services);
     }
     
@@ -31,36 +32,7 @@ public class DependencyTree
     /// <returns>An object containing the filtered chains and a tree view of their hierarchy.</returns>
     public DependencyChains GetRegistrationChainsByDepth(int minDepth, bool onlyUserCode = false)
     {
-        var deepChains = new List<ServiceNode>();
-        
-        foreach (var rootNode in _rootNodes)
-        {
-            if (!onlyUserCode || TypeRelevance.IsRelevantType(rootNode.Descriptor.ServiceType))
-            {
-                ExploreChains(rootNode, [rootNode], minDepth, deepChains, onlyUserCode);
-            }
-        }
-
-        var stringRepresentation = _treeViewer.GenerateTreeView(deepChains);
-        
-        return new(deepChains, stringRepresentation);
-    }
-
-    private void ExploreChains(ServiceNode node, List<ServiceNode> currentChain, int minDepth, List<ServiceNode> result, bool onlyUserCode)
-    {
-        if (currentChain.Count >= minDepth && !result.Contains(currentChain[0]))
-        {
-            result.Add(currentChain[0]);
-        }
-
-        foreach (var child in node.Dependencies)
-        {
-            if (!onlyUserCode || TypeRelevance.IsRelevantType(child.Descriptor.ServiceType))
-            {
-                var newChain = new List<ServiceNode>(currentChain) { child };
-                ExploreChains(child, newChain, minDepth, result, onlyUserCode);
-            }
-        }
+        return _depthAnalyser.GetRegistrationChainsByDepth(_rootNodes, minDepth, onlyUserCode);
     }
     
     /// <summary>
